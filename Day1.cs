@@ -2,12 +2,12 @@
 {
     internal class Day1 : Solution
     {
+        private IEnumerable<int> _packValues;
         public Day1() : base(1)
         {
             setCaloriePackValues();
         }
 
-        private IEnumerable<int> _packValues;
         private void setCaloriePackValues()
         {
             var elfPacks = new List<int>();
@@ -31,9 +31,7 @@
                             }
                             elfPacks.Insert(i + 1, calorieSum);
                         }
-
                     }
-
                     calorieSum = 0;
                 }
                 else

@@ -3,7 +3,7 @@
     internal class Elf
     {
         private const string path = "./day{0}{1}.txt";
-        private static Elf elf;
+        private static Elf? elf;
 
         private Elf() { }
 
