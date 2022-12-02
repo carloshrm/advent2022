@@ -2,7 +2,7 @@
 {
     internal class Elf
     {
-        private const string path = "./day{0}{1}.txt";
+        private const string path = "data/day{0}{1}.txt";
         private static Elf? elf;
 
         private Elf() { }
