@@ -6,7 +6,7 @@
 
         private int getPriority(char item)
         {
-            return char.IsUpper(item) ? item - '&' : item - '`';
+            return char.IsUpper(item) ? item - 'A' + 27 : item - ('a' - 1);
         }
 
         protected override int partOne()

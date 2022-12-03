@@ -10,7 +10,7 @@
         {
             this.day = day;
             var helper = Elf.callElf();
-            input = helper.getInput(day);
+            input = (helper.getInput(day), helper.getExample(day));
         }
 
         public virtual void runSolution()
