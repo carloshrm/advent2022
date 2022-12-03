@@ -6,7 +6,7 @@
         private static void Main(string[] args)
         {
             //solutions.Add(new Day1());
-            solutions.Add(new Day2());
+            solutions.Add(new Day3());
             solutions.ForEach(x => x.runSolution());
         }
     }
