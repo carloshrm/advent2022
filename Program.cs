@@ -8,8 +8,8 @@ namespace Namespace
         private static void Main(string[] args)
         {
             readSecrets();
-            solutions.Add(new Day3());
-            solutions.ForEach(x => x.runSolution());
+            solutions.Add(new Day4());
+            solutions.ForEach(x => x.runSolution(true));
         }
 
         private static void readSecrets()
