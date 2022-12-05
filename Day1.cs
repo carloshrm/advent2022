@@ -1,6 +1,6 @@
 ﻿namespace Namespace
 {
-    internal class Day1 : Solution
+    internal class Day1 : Solution<int>
     {
         private IEnumerable<int> _packValues;
         public Day1() : base(1)

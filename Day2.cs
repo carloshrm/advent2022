@@ -1,6 +1,6 @@
 ﻿namespace Namespace
 {
-    internal class Day2 : Solution
+    internal class Day2 : Solution<int>
     {
         public Day2() : base(2) { }
 

@@ -2,7 +2,7 @@
 
 namespace Namespace
 {
-    abstract class Solution
+    abstract class Solution<T>
     {
         private readonly string reportTemplate = "\n >> Solutions for day: {0} << \n part one :: {1} \n part two :: {2}";
         private readonly string bmTemplate = "\n :: Runtime << \n part one :: {0} \n part two :: {1}";
@@ -35,8 +35,8 @@ namespace Namespace
             if (benchmark)
                 Console.WriteLine(string.Format(bmTemplate, runtimeOne, runtimeTwo));
         }
-        protected abstract int partOne();
-        protected abstract int partTwo();
+        protected abstract T partOne();
+        protected abstract T partTwo();
     }
 
 }

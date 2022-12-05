@@ -4,12 +4,10 @@ namespace Namespace
 {
     internal class Program
     {
-        private static List<Solution> solutions = new List<Solution>();
         private static void Main(string[] args)
         {
             readSecrets();
-            solutions.Add(new Day4());
-            solutions.ForEach(x => x.runSolution(true));
+            new Day5().runSolution();
         }
 
         private static void readSecrets()
