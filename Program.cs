@@ -7,7 +7,7 @@ namespace Namespace
         private static void Main(string[] args)
         {
             readSecrets();
-            new Day5().runSolution();
+            new Day6().runSolution();
         }
 
         private static void readSecrets()
