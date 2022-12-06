@@ -6,27 +6,20 @@
 
         protected override int partOne()
         {
-            return getStartByMarkerLength(3);
+            return findStartByMarker(4);
         }
 
         protected override int partTwo()
         {
-            return getStartByMarkerLength(14);
+            return findStartByMarker(14);
         }
 
-        private int getStartByMarkerLength(int length)
+        private int findStartByMarker(int markerLength)
         {
-            var bucket = new Queue<char>();
-            for (int i = 0; i < input.data[0].Length; i++)
+            for (int i = markerLength; i < input.data[0].Length - (markerLength - 1); i++)
             {
-                bucket.Enqueue(input.data[0][i]);
-                if (bucket.Count == length)
-                {
-                    if (bucket.Distinct().Count() == length)
-                        return i + 1;
-                    else
-                        bucket.Dequeue();
-                }
+                if (input.data[0][(i - markerLength)..i].Distinct().Count() == markerLength)
+                    return i;
             }
             return -1;
         }
