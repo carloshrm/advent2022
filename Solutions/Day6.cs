@@ -6,15 +6,15 @@
 
         protected override int partOne()
         {
-            return findStartByMarker(4);
+            return findByMarker(4);
         }
 
         protected override int partTwo()
         {
-            return findStartByMarker(14);
+            return findByMarker(14);
         }
 
-        private int findStartByMarker(int markerLength)
+        private int findByMarker(int markerLength)
         {
             for (int i = markerLength; i < input.data[0].Length - (markerLength - 1); i++)
             {

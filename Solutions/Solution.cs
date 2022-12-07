@@ -12,7 +12,7 @@ namespace Namespace
         protected Solution(int day)
         {
             this.day = day;
-            var helper = Elf.callElf();
+            var helper = FileElf.callElf();
             input = (helper.getInput(day), helper.getExample(day));
         }
 
@@ -35,8 +35,23 @@ namespace Namespace
             if (benchmark)
                 Console.WriteLine(string.Format(bmTemplate, runtimeOne, runtimeTwo));
         }
-        protected abstract T partOne();
-        protected abstract T partTwo();
+        protected virtual T partOne()
+        {
+            foreach (var line in input.example)
+            {
+                Console.WriteLine(line);
+            }
+            return default;
+        }
+
+        protected virtual T partTwo()
+        {
+            foreach (var line in input.data)
+            {
+                Console.WriteLine(line);
+            }
+            return default;
+        }
     }
 
 }
