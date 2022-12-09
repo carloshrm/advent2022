@@ -47,13 +47,13 @@ namespace Namespace
         private string findExample(string rawHtml)
         {
             var result = string.Empty;
-            int start = 0;
+            int skipInvalidIndex = 0;
             do
             {
-                var startingIndex = rawHtml.IndexOf("<pre><code>", start) + "<pre><code>".Length;
+                var startingIndex = rawHtml.IndexOf("<pre><code>", skipInvalidIndex) + "<pre><code>".Length;
                 var endingIndex = rawHtml.IndexOf("</code>", startingIndex);
                 result = rawHtml.Substring(startingIndex, endingIndex - startingIndex);
-                start = endingIndex;
+                skipInvalidIndex = endingIndex;
             } while (result.Contains("<"));
 
             return result;
