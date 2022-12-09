@@ -7,12 +7,13 @@
         public Day7() : base(7)
         {
             buildDirectoryTree();
+            setTotalSizes(fileSystem);
         }
 
         protected override int partOne()
         {
             var foldersInRange = new List<ElfFolder>();
-            selectByLimit(100000, fileSystem, foldersInRange);
+            selectByRange(100000, fileSystem, foldersInRange);
             return foldersInRange.Sum(z => z.totalSize);
         }
 
@@ -30,52 +31,50 @@
 
             for (int i = 0; i < input.data.Length; i++)
             {
-                string line = input.data[i];
-                var inputSyntax = line.Split(' ');
-                if (inputSyntax[0] == "$")
+                var commandSyntax = input.data[i].Split(' ');
+                if (commandSyntax[0] == "$")
                 {
-                    if (inputSyntax[1] == "cd")
+                    if (commandSyntax[1] == "cd")
                     {
-                        if (inputSyntax[2] == "..")
+                        if (commandSyntax[2] == "..")
                             currentFolder = currentFolder.parent;
-                        else if (inputSyntax[2] == "/")
+                        else if (commandSyntax[2] == "/")
                             currentFolder = fileSystem;
                         else
-                            currentFolder = currentFolder.cd(inputSyntax[2]);
+                            currentFolder = currentFolder.cd(commandSyntax[2]);
                     }
                 }
                 else
                 {
-                    if (inputSyntax[0] == "dir")
-                        currentFolder.mkdir(inputSyntax[1]);
+                    if (commandSyntax[0] == "dir")
+                        currentFolder.mkdir(commandSyntax[1]);
                     else
-                        currentFolder.touch(inputSyntax[1], int.Parse(inputSyntax[0]));
+                        currentFolder.touch(commandSyntax[1], int.Parse(commandSyntax[0]));
                 }
             }
         }
 
-        private int selectByLimit(int limit, ElfFolder f, List<ElfFolder> selection)
+        private void selectByRange(int limit, ElfFolder currentFolder, List<ElfFolder> selection)
         {
-            if (f.folders.Count == 0)
-                return f.totalSize;
-            else
+            foreach (var dir in currentFolder.folders)
             {
-                foreach (var dir in f.folders)
-                {
-                    f.totalSize += selectByLimit(limit, dir, selection);
-                    if (dir.totalSize < limit) selection.Add(dir);
-                }
-                return f.totalSize;
+                selectByRange(limit, dir, selection);
+                if (dir.totalSize < limit)
+                    selection.Add(dir);
             }
+        }
+
+        private int setTotalSizes(ElfFolder currentFolder)
+        {
+            foreach (var dir in currentFolder.folders)
+                currentFolder.totalSize += setTotalSizes(dir);
+            return currentFolder.totalSize;
         }
 
         private void selectDeletionCandidates(int freeSpace, ElfFolder currentFolder, List<ElfFolder> deletable)
         {
-            if (currentFolder.folders.Count != 0)
-            {
-                foreach (var dir in currentFolder.folders)
-                    selectDeletionCandidates(freeSpace, dir, deletable);
-            }
+            foreach (var dir in currentFolder.folders)
+                selectDeletionCandidates(freeSpace, dir, deletable);
             if (freeSpace + currentFolder.totalSize >= 30000000)
                 deletable.Add(currentFolder);
         }
