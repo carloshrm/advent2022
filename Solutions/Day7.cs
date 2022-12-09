@@ -2,32 +2,32 @@
 {
     internal class Day7 : Solution<int>
     {
-        private ElfFolder fileSystem;
+        private ElfFolder _fileSystem;
 
         public Day7() : base(7)
         {
             buildDirectoryTree();
-            setTotalSizes(fileSystem);
+            setTotalSizes(_fileSystem);
         }
 
         protected override int partOne()
         {
             var foldersInRange = new List<ElfFolder>();
-            selectByRange(100000, fileSystem, foldersInRange);
+            selectByRange(100000, _fileSystem, foldersInRange);
             return foldersInRange.Sum(z => z.totalSize);
         }
 
         protected override int partTwo()
         {
             var withinLimit = new List<ElfFolder>();
-            selectDeletionCandidates(70000000 - fileSystem.totalSize, fileSystem, withinLimit);
+            selectDeletionCandidates(70000000 - _fileSystem.totalSize, _fileSystem, withinLimit);
             return withinLimit.Min(fdr => fdr.totalSize);
         }
 
         private void buildDirectoryTree()
         {
-            fileSystem = new ElfFolder(null, "/");
-            var currentFolder = fileSystem;
+            _fileSystem = new ElfFolder(null, "/");
+            var currentFolder = _fileSystem;
 
             for (int i = 0; i < input.data.Length; i++)
             {
@@ -39,7 +39,7 @@
                         if (commandSyntax[2] == "..")
                             currentFolder = currentFolder.parent;
                         else if (commandSyntax[2] == "/")
-                            currentFolder = fileSystem;
+                            currentFolder = _fileSystem;
                         else
                             currentFolder = currentFolder.cd(commandSyntax[2]);
                     }
@@ -78,55 +78,49 @@
             if (freeSpace + currentFolder.totalSize >= 30000000)
                 deletable.Add(currentFolder);
         }
-    }
-
-    internal class ElfFile
-    {
-        public int size;
-        public string name;
-
-        public ElfFile(int size, string name)
+        private sealed class ElfFile
         {
-            this.size = size;
-            this.name = name;
-        }
-    }
+            public int size;
+            public string name;
 
-    internal class ElfFolder
-    {
-        public string name;
-        public ElfFolder? parent;
-        public int totalSize;
-        public List<ElfFolder> folders { get; set; }
-        public List<ElfFile> files { get; set; }
-
-        public ElfFolder(ElfFolder? parent, string name)
-        {
-            folders = new List<ElfFolder>();
-            files = new List<ElfFile>();
-            this.parent = parent;
-            this.name = name;
+            public ElfFile(int size, string name)
+            {
+                this.size = size;
+                this.name = name;
+            }
         }
 
-        public void touch(string name, int size)
+        private sealed class ElfFolder
         {
-            files.Add(new ElfFile(size, name));
-            totalSize += size;
-        }
+            public string name;
+            public ElfFolder? parent;
+            public int totalSize;
+            public List<ElfFolder> folders { get; set; }
+            public List<ElfFile> files { get; set; }
 
-        public void mkdir(string name)
-        {
-            folders.Add(new ElfFolder(this, name));
-        }
+            public ElfFolder(ElfFolder? parent, string name)
+            {
+                folders = new List<ElfFolder>();
+                files = new List<ElfFile>();
+                this.parent = parent;
+                this.name = name;
+            }
 
-        public ElfFile getFile(string name)
-        {
-            return files.First(f => f.name == name);
-        }
+            public void touch(string name, int size)
+            {
+                files.Add(new ElfFile(size, name));
+                totalSize += size;
+            }
 
-        public ElfFolder cd(string name)
-        {
-            return folders.First(f => f.name == name);
+            public void mkdir(string name)
+            {
+                folders.Add(new ElfFolder(this, name));
+            }
+
+            public ElfFolder cd(string name)
+            {
+                return folders.First(f => f.name == name);
+            }
         }
     }
 }
