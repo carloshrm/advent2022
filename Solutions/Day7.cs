@@ -1,12 +1,12 @@
-﻿namespace Namespace
+﻿namespace Solutions
 {
     internal class Day7 : Solution<int>
     {
-        private ElfFolder _fileSystem;
+        private ElfFolder _fileSystem { get; init; }
 
         public Day7() : base(7)
         {
-            buildDirectoryTree();
+            _fileSystem = buildDirectoryTree();
             setTotalSizes(_fileSystem);
         }
 
@@ -24,10 +24,10 @@
             return withinLimit.Min(fdr => fdr.totalSize);
         }
 
-        private void buildDirectoryTree()
+        private ElfFolder buildDirectoryTree()
         {
-            _fileSystem = new ElfFolder(null, "/");
-            var currentFolder = _fileSystem;
+            var root = new ElfFolder(null, "/");
+            var currentFolder = root;
 
             for (int i = 0; i < input.data.Length; i++)
             {
@@ -39,7 +39,7 @@
                         if (commandSyntax[2] == "..")
                             currentFolder = currentFolder.parent;
                         else if (commandSyntax[2] == "/")
-                            currentFolder = _fileSystem;
+                            currentFolder = root;
                         else
                             currentFolder = currentFolder.cd(commandSyntax[2]);
                     }
@@ -52,6 +52,7 @@
                         currentFolder.touch(commandSyntax[1], int.Parse(commandSyntax[0]));
                 }
             }
+            return root;
         }
 
         private void selectByRange(int limit, ElfFolder currentFolder, List<ElfFolder> selection)

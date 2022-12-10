@@ -1,22 +1,28 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Solutions;
+using System.Reflection;
 
-namespace Namespace
+namespace Advent2022
 {
     internal class Program
     {
         private static void Main(string[] args)
         {
             readSecrets();
-            new Day8().runSolution(true);
+            foreach (var s in instantiateSolutions()) s.runSolution();
         }
 
         private static void readSecrets()
         {
-            var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
-            foreach (var child in config.GetChildren())
-            {
+            foreach (var child in new ConfigurationBuilder().AddUserSecrets<Program>().Build().GetChildren())
                 Environment.SetEnvironmentVariable(child.Key, child.Value);
-            }
+        }
+
+        private static IEnumerable<ISolution?> instantiateSolutions()
+        {
+            return Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.Name.Contains("Day"))
+                .Select(t => (ISolution)Activator.CreateInstance(t));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Namespace
+﻿namespace Elves
 {
     internal class FileElf
     {
@@ -22,6 +22,7 @@
             {
                 var request = HttpElf.callElf().getDataFromHttp(day);
                 mainData = request.Result.Split("\n");
+                mainData = mainData[..(mainData.Length - 1)];
                 File.WriteAllLines(string.Format(path, day, ""), mainData);
             }
             return mainData;
@@ -34,6 +35,7 @@
             {
                 var request = HttpElf.callElf().getExampleFromHttp(day);
                 exampleData = request.Result.Split("\n");
+                exampleData = exampleData[..(exampleData.Length - 1)];
                 File.WriteAllLines(string.Format(path, day, "e"), exampleData);
             }
             return exampleData;

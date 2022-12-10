@@ -1,4 +1,4 @@
-﻿namespace Namespace
+﻿namespace Solutions
 {
     internal class Day4 : Solution<int>
     {

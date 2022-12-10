@@ -1,13 +1,15 @@
 ﻿using System.Diagnostics;
 
-namespace Namespace
+using Elves;
+
+namespace Solutions
 {
-    abstract class Solution<T>
+    abstract class Solution<T> : ISolution
     {
         private readonly string reportTemplate = "\n >> Solutions for day: {0} << \n part one :: {1} \n part two :: {2}";
         private readonly string bmTemplate = "\n :: Runtime << \n part one :: {0} \n part two :: {1}";
-        protected int day;
-        protected (string[] data, string[] example) input;
+        protected int day { get; init; }
+        protected (string[] data, string[] example) input { get; set; }
 
         protected Solution(int day)
         {
