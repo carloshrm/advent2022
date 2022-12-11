@@ -3,6 +3,7 @@
     internal class Day7 : Solution<int>
     {
         private readonly ElfFsManager _fsManager;
+
         public Day7() : base(7)
         {
             _fsManager = ElfFsManager.getManager();
@@ -13,19 +14,19 @@
         protected override int partOne()
         {
             var foldersInRange = new List<ElfFolder>();
-            _fsManager.selectByRange(100000, foldersInRange, _fsManager.getRoot());
+            _fsManager.selectByRange(limit: 100000, foldersInRange);
             return foldersInRange.Sum(z => z.totalSize);
         }
 
         protected override int partTwo()
         {
-            var withinLimit = new List<ElfFolder>();
-            _fsManager.selectDeletionCandidates(freeSpace: 70000000 - _fsManager.getRoot().totalSize, withinLimit, _fsManager.getRoot());
-            return withinLimit.Min(fdr => fdr.totalSize);
+            var deletables = new List<ElfFolder>();
+            _fsManager.selectDeletionCandidates(freeSpace: 70000000 - _fsManager.getRoot().totalSize, deletables);
+            return deletables.Min(fdr => fdr.totalSize);
         }
     }
 
-    internal sealed class ElfFile
+    internal class ElfFile
     {
         public int size;
         public string name;
@@ -37,7 +38,7 @@
         }
     }
 
-    internal sealed class ElfFolder
+    internal class ElfFolder
     {
         private readonly string name;
         private readonly List<ElfFile> files;
@@ -65,9 +66,9 @@
         public ElfFolder cd(string name) => folders.First(f => f.name == name);
     }
 
-    internal sealed class ElfFsManager
+    internal class ElfFsManager
     {
-        private static ElfFsManager _folderManager;
+        private static ElfFsManager? _folderManager;
         private ElfFolder? _root;
 
         private ElfFsManager() { }
@@ -76,7 +77,6 @@
         {
             if (_folderManager == null)
                 _folderManager = new ElfFsManager();
-
             return _folderManager;
         }
 
@@ -86,43 +86,40 @@
         {
             foreach (var dir in currentFolder.folders)
                 currentFolder.totalSize += setTotalSizes(dir);
-
             return currentFolder.totalSize;
         }
 
         public void buildDirectoryTree(string[] source)
         {
-            var newRoot = new ElfFolder(null, "/");
-            var currentFolder = newRoot;
-
-            for (int i = 0; i < source.Length; i++)
+            _root = new ElfFolder(null, "/");
+            var currentFolder = _root;
+            foreach (var cmd in source.Select(ln => ln.Split(' ')))
             {
-                var commandSyntax = source[i].Split(' ');
-                if (commandSyntax[0] == "$")
+                if (cmd[0] == "$" && cmd[1] == "cd")
                 {
-                    if (commandSyntax[1] == "cd")
-                    {
-                        if (commandSyntax[2] == "..")
-                            currentFolder = currentFolder!.parent;
-                        else if (commandSyntax[2] == "/")
-                            currentFolder = newRoot;
-                        else
-                            currentFolder = currentFolder.cd(commandSyntax[2]);
-                    }
-                }
-                else
-                {
-                    if (commandSyntax[0] == "dir")
-                        currentFolder.mkdir(commandSyntax[1]);
+                    if (cmd[2] == "..")
+                        currentFolder = currentFolder!.parent;
+                    else if (cmd[2] == "/")
+                        currentFolder = _root;
                     else
-                        currentFolder.touch(commandSyntax[1], int.Parse(commandSyntax[0]));
+                        currentFolder = currentFolder!.cd(cmd[2]);
+                }
+                else if (cmd[0] != "$")
+                {
+                    if (cmd[0] == "dir")
+                        currentFolder!.mkdir(cmd[1]);
+                    else
+                        currentFolder!.touch(cmd[1], int.Parse(cmd[0]));
                 }
             }
-            _root = newRoot;
         }
-        public void selectByRange(int limit, List<ElfFolder> selection, ElfFolder currentFolder)
+
+        public void selectByRange(int limit, List<ElfFolder> selection, ElfFolder? currentFolder = null)
         {
-            foreach (var dir in currentFolder.folders)
+            if (currentFolder == null)
+                currentFolder = _root;
+
+            foreach (var dir in currentFolder!.folders)
             {
                 selectByRange(limit, selection, dir);
                 if (dir.totalSize < limit)
@@ -130,9 +127,12 @@
             }
         }
 
-        public void selectDeletionCandidates(int freeSpace, List<ElfFolder> deletable, ElfFolder currentFolder)
+        public void selectDeletionCandidates(int freeSpace, List<ElfFolder> deletable, ElfFolder? currentFolder = null)
         {
-            foreach (var dir in currentFolder.folders)
+            if (currentFolder == null)
+                currentFolder = _root;
+
+            foreach (var dir in currentFolder!.folders)
                 selectDeletionCandidates(freeSpace, deletable, dir);
 
             if (freeSpace + currentFolder.totalSize >= 30000000)

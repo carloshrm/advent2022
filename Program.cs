@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Reflection;
+
+using Microsoft.Extensions.Configuration;
+
 using Solutions;
-using System.Reflection;
 
 namespace Advent2022
 {
@@ -8,11 +10,12 @@ namespace Advent2022
     {
         private static void Main(string[] args)
         {
-            readSecrets();
-            foreach (var s in instantiateSolutions()) s.runSolution();
+            readEnvSecrets();
+            foreach (var s in instantiateSolutions())
+                s?.runSolution();
         }
 
-        private static void readSecrets()
+        private static void readEnvSecrets()
         {
             foreach (var child in new ConfigurationBuilder().AddUserSecrets<Program>().Build().GetChildren())
                 Environment.SetEnvironmentVariable(child.Key, child.Value);

@@ -7,7 +7,7 @@ namespace Solutions
     abstract class Solution<T> : ISolution
     {
         private readonly string reportTemplate = "\n >> Solutions for day: {0} << \n part one :: {1} \n part two :: {2}";
-        private readonly string bmTemplate = "\n :: Runtime << \n part one :: {0} \n part two :: {1}";
+        private readonly string benchTemplate = "\n :: Runtime << \n part one :: {0} \n part two :: {1}";
         protected int day { get; init; }
         protected (string[] data, string[] example) input { get; set; }
 
@@ -20,22 +20,21 @@ namespace Solutions
 
         public virtual void runSolution(bool benchmark = false)
         {
-            var sw = benchmark ? new Stopwatch() : null;
-
-            sw?.Start();
+            var watch = benchmark ? new Stopwatch() : null;
+            watch?.Start();
             var resultOne = partOne();
-            sw?.Stop();
+            watch?.Stop();
 
-            var runtimeOne = sw?.Elapsed;
+            var runtimeOne = watch?.Elapsed;
 
-            sw?.Restart();
+            watch?.Restart();
             var resultTwo = partTwo();
-            sw?.Stop();
+            watch?.Stop();
 
-            var runtimeTwo = sw?.Elapsed;
+            var runtimeTwo = watch?.Elapsed;
             Console.WriteLine(string.Format(reportTemplate, day, resultOne, resultTwo));
             if (benchmark)
-                Console.WriteLine(string.Format(bmTemplate, runtimeOne, runtimeTwo));
+                Console.WriteLine(string.Format(benchTemplate, runtimeOne, runtimeTwo));
         }
         protected virtual T partOne()
         {

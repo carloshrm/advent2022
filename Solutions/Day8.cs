@@ -6,51 +6,28 @@
 
         public Day8() : base(8) => _forest = setTrees();
 
-        private bool isEdge(int x, int y) => x == 0 || y == 0 || x == input.data.Length - 1 || y == input.data.First().Length - 1;
-
-        protected override int partOne()
-        {
-            int totalVisible = (_forest.Length * _forest.First().Length) - ((_forest.Length - 2) * (_forest.First().Length - 2));
-            for (int i = 1; i < _forest.Length - 1; i++)
-            {
-                for (int j = 1; j < _forest[i].Length - 1; j++)
-                {
-                    (bool up, bool right, bool left, bool down)
-                        visibility = (
-                        checkVisibility(i, j, 0, 1),
-                        checkVisibility(i, j, 1, 0),
-                        checkVisibility(i, j, -1, 0),
-                        checkVisibility(i, j, 0, -1)
-                        );
-
-                    if (visibility.up || visibility.left || visibility.right || visibility.down)
-                    {
-                        totalVisible++;
-                    }
-                }
-            }
-            return totalVisible;
-        }
+        protected override int partOne() => _forest.Sum(r => r.Count(tr => tr.isVisible));
 
         protected override int partTwo() => _forest.Max(f => f.Max(tr => tr.scenicScore));
 
-        private bool checkVisibility(int i, int j, int iX, int jX)
+        private bool isEdge(int x, int y) => x == 0 || y == 0 || x == input.data.Length - 1 || y == input.data.First().Length - 1;
+
+        private void processVisibility(ForestTree tree, int i, int j, int iX, int jX)
         {
             int s = 0;
-            while ((i + iX) < _forest.Length && i + iX >= 0 && j + jX < _forest[i].Length && j + jX >= 0)
+            while ((i + iX) < input.data.Length && i + iX >= 0 && j + jX < input.data[i].Length && j + jX >= 0)
             {
                 s++;
-                if (_forest[i][j].height <= _forest[i + iX][j + jX].height)
+                if (tree.height <= (int)char.GetNumericValue(input.data[i + iX][j + jX]))
                 {
-                    _forest[i][j].scenicScore *= s;
-                    return false;
+                    tree.scenicScore *= s;
+                    return;
                 }
                 if (iX != 0) iX += iX > 0 ? 1 : -1;
                 if (jX != 0) jX += jX > 0 ? 1 : -1;
             }
-            _forest[i][j].scenicScore *= s;
-            _forest[i][j].isVisible = true;
-            return true;
+            tree.scenicScore *= s;
+            tree.isVisible = true;
         }
 
         private ForestTree[][] setTrees()
@@ -60,9 +37,17 @@
             {
                 for (int j = 0; j < input.data[i].Length; j++)
                 {
-                    newForest[i][j] = new ForestTree(input.data[i][j]);
+                    var newTree = new ForestTree(input.data[i][j]);
                     if (isEdge(i, j))
-                        newForest[i][j].isVisible = true;
+                        newTree.isVisible = true;
+                    else
+                    {
+                        processVisibility(newTree, i, j, 0, 1);
+                        processVisibility(newTree, i, j, 1, 0);
+                        processVisibility(newTree, i, j, -1, 0);
+                        processVisibility(newTree, i, j, 0, -1);
+                    }
+                    newForest[i][j] = newTree;
                 }
             }
             return newForest;
