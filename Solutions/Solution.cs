@@ -7,7 +7,7 @@ namespace Solutions
     abstract class Solution<T> : ISolution
     {
         private readonly string reportTemplate = "\n >> Solutions for day: {0} << \n part one :: {1} \n part two :: {2}";
-        private readonly string benchTemplate = "\n :: Runtime << \n part one :: {0} \n part two :: {1}";
+        private readonly string benchTemplate = ":: Runtime \n part one :: {0} \n part two :: {1}";
         protected int day { get; init; }
         protected (string[] data, string[] example) input { get; set; }
 

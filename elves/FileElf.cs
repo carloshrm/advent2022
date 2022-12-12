@@ -22,7 +22,7 @@
             {
                 var request = HttpElf.callElf().getDataFromHttp(day);
                 mainData = request.Result.Split("\n");
-                mainData = mainData[..(mainData.Length - 1)];
+                mainData = mainData[..mainData.Length];
                 File.WriteAllLines(string.Format(path, day, ""), mainData);
             }
             return mainData;
@@ -35,7 +35,7 @@
             {
                 var request = HttpElf.callElf().getExampleFromHttp(day);
                 exampleData = request.Result.Split("\n");
-                exampleData = exampleData[..(exampleData.Length - 1)];
+                exampleData = exampleData[..exampleData.Length];
                 File.WriteAllLines(string.Format(path, day, "e"), exampleData);
             }
             return exampleData;

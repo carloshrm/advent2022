@@ -15,7 +15,7 @@
         {
             var foldersInRange = new List<ElfFolder>();
             _fsManager.selectByRange(limit: 100000, foldersInRange);
-            return foldersInRange.Sum(z => z.totalSize);
+            return foldersInRange.Sum(fdr => fdr.totalSize);
         }
 
         protected override int partTwo()
@@ -41,11 +41,10 @@
     internal class ElfFolder
     {
         private readonly string name;
-        private readonly List<ElfFile> files;
-
-        public int totalSize { get; set; }
+        public List<ElfFolder> folders { get; }
+        public List<ElfFile> files { get; }
         public ElfFolder? parent { get; init; }
-        public List<ElfFolder> folders { get; set; }
+        public int totalSize { get; set; }
 
         public ElfFolder(ElfFolder? parent, string name)
         {
@@ -55,11 +54,7 @@
             this.name = name;
         }
 
-        public void touch(string name, int size)
-        {
-            files.Add(new ElfFile(size, name));
-            totalSize += size;
-        }
+        public void cat(string name, int size) => files.Add(new ElfFile(size, name));
 
         public void mkdir(string name) => folders.Add(new ElfFolder(this, name));
 
@@ -84,6 +79,7 @@
 
         public int setTotalSizes(ElfFolder currentFolder)
         {
+            currentFolder.totalSize += currentFolder.files.Sum(fl => fl.size);
             foreach (var dir in currentFolder.folders)
                 currentFolder.totalSize += setTotalSizes(dir);
             return currentFolder.totalSize;
@@ -109,7 +105,7 @@
                     if (cmd[0] == "dir")
                         currentFolder!.mkdir(cmd[1]);
                     else
-                        currentFolder!.touch(cmd[1], int.Parse(cmd[0]));
+                        currentFolder!.cat(cmd[1], int.Parse(cmd[0]));
                 }
             }
         }
