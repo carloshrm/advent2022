@@ -30,7 +30,7 @@
 
         public string[] getExample(int day)
         {
-            var exampleData = getDataFromFile(day, isExample: true); ;
+            var exampleData = getDataFromFile(day, isExample: true);
             if (exampleData.Any() is false)
             {
                 var request = HttpElf.callElf().getExampleFromHttp(day);

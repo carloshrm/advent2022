@@ -53,6 +53,8 @@ namespace Solutions
             }
             return default;
         }
+
+        protected delegate T partTest<T>();
     }
 
 }
