@@ -12,7 +12,7 @@ namespace Advent2022
         {
             readEnvSecrets();
             foreach (var s in instantiateSolutions())
-                s?.runSolution();
+                s?.runSolution(true);
         }
 
         private static void readEnvSecrets()
