@@ -1,6 +1,6 @@
 ﻿namespace Solutions
 {
-    internal class Day8 : Solution<int>
+    internal class Day8 : Solution<int, int>
     {
         private ForestTree[][] _forest { get; init; }
 

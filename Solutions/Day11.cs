@@ -4,12 +4,9 @@ using Solutions;
 
 namespace Advent2022
 {
-    internal class Day11 : Solution<int>
+    internal class Day11 : Solution<int, ulong>
     {
-        public Day11() : base(11)
-        {
-
-        }
+        public Day11() : base(11) { }
 
         protected override int partOne()
         {
@@ -24,7 +21,7 @@ namespace Advent2022
             return new List<Monkey>(monkeys).OrderByDescending(m => m.inpCount).Take(2).Aggregate(1, (prod, mky) => (int)mky.inpCount * prod);
         }
 
-        protected override int partTwo()
+        protected override ulong partTwo()
         {
             var monkeys = new List<Monkey>();
             foreach (var m in MonkeyService.readMonkey(input.data))
@@ -35,7 +32,7 @@ namespace Advent2022
                 foreach (var m in monkeys)
                     m.takeTurn(monkeys, globalMod);
             }
-            return new List<Monkey>(monkeys).OrderByDescending(m => m.inpCount).Take(2).Aggregate(1, (prod, mky) => mky.inpCount * prod);
+            return new List<Monkey>(monkeys).OrderByDescending(m => m.inpCount).Take(2).Aggregate((ulong)1, (prod, mky) => mky.inpCount * prod);
         }
     }
 

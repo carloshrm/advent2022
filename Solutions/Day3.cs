@@ -1,13 +1,10 @@
 ﻿namespace Solutions
 {
-    internal class Day3 : Solution<int>
+    internal class Day3 : Solution<int, int>
     {
         public Day3() : base(3) { }
 
-        private int getPriority(char item)
-        {
-            return char.IsUpper(item) ? item - 'A' + 27 : item - ('a' - 1);
-        }
+        private int getPriority(char item) => char.IsUpper(item) ? item - 'A' + 27 : item - ('a' - 1);
 
         protected override int partOne()
         {

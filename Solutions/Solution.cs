@@ -4,7 +4,7 @@ using Elves;
 
 namespace Solutions
 {
-    abstract class Solution<T> : ISolution
+    abstract class Solution<T, U> : ISolution
     {
         private readonly string reportTemplate = "\n >> Solutions for day: {0} << \n part one :: {1} \n part two :: {2}";
         private readonly string benchTemplate = ":: Runtime \n part one :: {0} \n part two :: {1}";
@@ -45,7 +45,7 @@ namespace Solutions
             return default;
         }
 
-        protected virtual T partTwo()
+        protected virtual U partTwo()
         {
             foreach (var line in input.data)
             {

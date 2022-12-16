@@ -2,7 +2,7 @@
 
 namespace Solution
 {
-    internal class Day9 : Solution<int>
+    internal class Day9 : Solution<int, int>
     {
         private readonly IReadOnlyDictionary<string, (int, int)> directionKey = new Dictionary<string, (int, int)>
         {

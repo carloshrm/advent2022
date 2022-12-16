@@ -1,6 +1,6 @@
 ﻿namespace Solutions
 {
-    internal class Day7 : Solution<int>
+    internal class Day7 : Solution<int, int>
     {
         private readonly ElfFsManager _fsManager;
 

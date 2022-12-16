@@ -1,18 +1,12 @@
 ﻿namespace Solutions
 {
-    internal class Day6 : Solution<int>
+    internal class Day6 : Solution<int, int>
     {
         public Day6() : base(6) { }
 
-        protected override int partOne()
-        {
-            return findByMarker(4);
-        }
+        protected override int partOne() => findByMarker(4);
 
-        protected override int partTwo()
-        {
-            return findByMarker(14);
-        }
+        protected override int partTwo() => findByMarker(14);
 
         private int findByMarker(int markerLength)
         {

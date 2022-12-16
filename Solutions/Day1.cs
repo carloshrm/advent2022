@@ -1,19 +1,13 @@
 ﻿namespace Solutions
 {
-    internal class Day1 : Solution<int>
+    internal class Day1 : Solution<int, int>
     {
         private readonly IEnumerable<int> _packValues;
-        public Day1() : base(1) { _packValues = setCaloriePackValues(); }
+        public Day1() : base(1) => _packValues = setCaloriePackValues();
 
-        protected override int partOne()
-        {
-            return _packValues.LastOrDefault();
-        }
+        protected override int partOne() => _packValues.LastOrDefault();
 
-        protected override int partTwo()
-        {
-            return _packValues.TakeLast(3).Sum();
-        }
+        protected override int partTwo() => _packValues.TakeLast(3).Sum();
 
         private List<int> setCaloriePackValues()
         {

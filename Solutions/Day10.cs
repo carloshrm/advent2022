@@ -4,7 +4,7 @@ using Solutions;
 
 namespace Advent2022
 {
-    internal class Day10 : Solution<int>
+    internal class Day10 : Solution<int, string>
     {
         public Day10() : base(10) { }
 
@@ -43,7 +43,7 @@ namespace Advent2022
         }
 
 
-        protected override int partTwo()
+        protected override string partTwo()
         {
             var message = new StringBuilder();
             int reg = 1;
@@ -77,8 +77,7 @@ namespace Advent2022
                     clk++;
                 }
             }
-            Console.WriteLine(message.ToString());
-            return -1;
+            return message.ToString();
         }
     }
 }

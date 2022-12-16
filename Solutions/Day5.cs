@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Solutions
 {
-    internal class Day5 : Solution<string>
+    internal class Day5 : Solution<string, string>
     {
         private int rowCount;
         private IEnumerable<string> crateInfo;
@@ -16,7 +16,6 @@ namespace Solutions
         protected override string partOne()
         {
             var crateStacks = setupCrateStacks();
-
             for (int i = crateStacks.Count() + 1; i < input.data.Length; i++)
             {
                 var match = Regex.Matches(input.data[i], @"\d+").Select(m => int.Parse(m.Value));
@@ -31,7 +30,6 @@ namespace Solutions
         protected override string partTwo()
         {
             var crateStacks = setupCrateStacks();
-
             for (int i = crateStacks.Count() + 1; i < input.data.Length; i++)
             {
                 var match = Regex.Matches(input.data[i], @"\d+").Select(m => int.Parse(m.Value));
@@ -44,7 +42,6 @@ namespace Solutions
                 while (temp.Any())
                     crateStacks.ElementAt(match.Last() - 1).Push(temp.Pop());
             }
-
             return readResult(crateStacks);
         }
 

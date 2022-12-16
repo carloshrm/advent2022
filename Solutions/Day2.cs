@@ -1,6 +1,6 @@
 ﻿namespace Solutions
 {
-    internal class Day2 : Solution<int>
+    internal class Day2 : Solution<int, int>
     {
         public Day2() : base(2) { }
 
