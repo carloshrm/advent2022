@@ -29,13 +29,13 @@
 
         protected override int partTwo() => traverseMap('E', 'a');
 
-        private int traverseMap(char from, char to)
+        private int traverseMap(char source, char destination)
         {
             resetMap();
             var explorationDue = new Queue<ElfNode<char>>();
-            var startingPosition = _map.SelectMany(r => r).First(y => y.height == from);
-            from = from == 'S' ? 'a' : 'z';
-            startingPosition.height = from;
+            var startingPosition = _map.SelectMany(r => r).First(y => y.height == source);
+            source = source == 'S' ? 'a' : 'z';
+            startingPosition.height = source;
             explorationDue.Enqueue(startingPosition);
 
             while (explorationDue.Count != 0)
@@ -47,25 +47,24 @@
 
                 foreach (var direction in new (int r, int c)[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
                 {
-                    (int nr, int nc) = (current.row + direction.r, current.col + direction.c);
+                    (int nextRow, int nextCol) = (current.row + direction.r, current.col + direction.c);
 
-                    if (nr >= 0 && nr < _map.Length && nc >= 0 && nc < _map[nr].Length)
+                    if (nextRow >= 0 && nextRow < _map.Length && nextCol >= 0 && nextCol < _map[nextRow].Length)
                     {
-                        (var nxt, var crr) = (_map[nr][nc].height, current.height);
+                        (var nextNode, var currentNode) = (_map[nextRow][nextCol].height, current.height);
 
-                        if (nxt == to && crr == (to == 'E' ? 'z' : to + 1))
+                        if (nextNode == destination && currentNode == (destination == 'E' ? 'z' : destination + 1))
                             return current.step + 1;
 
-                        if (from > (to == 'E' ? 'z' : to + 1))
-                            (nxt, crr) = (crr, nxt);
-                        if (nxt - crr <= 1)
+                        if (source > (destination == 'E' ? 'z' : destination + 1))
+                            (nextNode, currentNode) = (currentNode, nextNode);
+                        if (nextNode - currentNode <= 1)
                         {
-                            _map[nr][nc].step = current.step + 1;
-                            explorationDue.Enqueue(_map[nr][nc]);
+                            _map[nextRow][nextCol].step = current.step + 1;
+                            explorationDue.Enqueue(_map[nextRow][nextCol]);
                         }
                     }
                 }
-
             }
             return -1;
         }
@@ -80,6 +79,5 @@
                 }
             }
         }
-
     }
 }
