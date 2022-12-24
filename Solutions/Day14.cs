@@ -1,31 +1,57 @@
 ﻿using Solutions;
 
+using Spectre.Console;
+
 namespace Advent2022
 {
     internal class Day14 : Solution<int, int>
     {
-        private readonly int[] sandHole = { 500, 0 };
-        private int bottom = 0;
+        private int bottomEdge = 0;
+        private int sideEdge = 0;
         private List<Rock> cave;
         private List<Sand> sand;
 
         public Day14() : base(14)
         {
-            Console.CursorVisible = false;
+            //input = (input.example, input.example);
+            //Console.CursorVisible = false;
+            //Console.SetBufferSize(2048, 2048);
             cave = new List<Rock>();
             sand = new List<Sand>();
-            //input = (input.example, input.example);
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    for (int j = 0; j < 20; j++)
-            //    {
-            //        Console.Write(".");
-            //    }
-            //    Console.WriteLine();
-            //}
+            buildCave();
+
         }
 
         protected override int partOne()
+        {
+            int count = 0;
+            while (dropSand())
+            {
+                count++;
+                sand.RemoveAll(s => s.packed);
+            }
+            return count;
+        }
+
+        protected override int partTwo()
+        {
+            int count = 0;
+            //sand.ForEach(s => s.erase());
+            sand.Clear();
+            for (int i = 1; i < sideEdge * 2; i++)
+            {
+                cave.Add(new Rock(bottomEdge + 2, i));
+                //cave.Last().draw();
+            }
+            while (dropSand())
+            {
+                count++;
+                sand.RemoveAll(s => s.packed);
+            }
+            return count + 1;
+        }
+
+        private void buildCave()
         {
             foreach (var ln in input.data)
             {
@@ -48,56 +74,58 @@ namespace Advent2022
                         yOffset += yOffset == 0 ? 0 : yOffset > 0 ? -1 : 1;
                     }
                     cave.Add(new Rock(secondPoint.Last(), secondPoint.First()));
-                    if (secondPoint.Last() > bottom)
-                        bottom = secondPoint.Last();
+
+                    if (secondPoint.Last() > bottomEdge)
+                        bottomEdge = secondPoint.Last();
+                    if (secondPoint.First() > sideEdge)
+                        sideEdge = secondPoint.First();
                 }
             }
-            Console.SetCursorPosition(500 - 400, 0);
-            Console.Write("*");
-            cave.ForEach(r => r.draw());
-            dropSand();
-            return sand.Count;
+            //Console.SetCursorPosition(500, 0);
+            //Console.Write("*");
+            //cave.ForEach(r => r.draw());
         }
 
-
-        private void dropSand()
+        private bool dropSand()
         {
             var newSand = new Sand();
-            newSand.draw();
             int dropState = 1;
             while (dropState != -1)
             {
-                foreach (var obj in new List<ITwoDimObj>().Concat(cave).Concat(sand))
+                foreach (var obj in new List<IStuffOnAGrid>().Concat(cave.Where(c => c.row == newSand.row + 1)).Concat(sand))
                 {
                     dropState = newSand.checkSurroundings(obj);
-                    if (dropState != 1) break;
+                    if (dropState != 1)
+                        break;
                 }
-                if (dropState == 1)
-                {
-                    newSand.drop();
-                }
-                else if (dropState == -1)
-                {
-                    break;
-                }
-                if (newSand.row > bottom)
-                    return;
 
+                if (dropState == 1)
+                    newSand.drop();
+                else if (dropState == -1)
+                    break;
+
+                if (newSand.row > bottomEdge + 2)
+                    return false;
             }
+            //newSand.draw();
             sand.Add(newSand);
-            dropSand();
+            foreach (var s in sand.Where(s => s.row == newSand.row + 2 && s.col == newSand.col))
+                s.pack();
+
+            if (newSand.row <= 0)
+                return false;
+            return true;
         }
 
-        protected override int partTwo() => base.partTwo();
     }
 
-    internal interface ITwoDimObj
+    internal interface IStuffOnAGrid
     {
         int row { get; set; }
         int col { get; set; }
     }
 
-    internal class Rock : ITwoDimObj
+    internal class Rock : IStuffOnAGrid
     {
         public int row { get; set; }
         public int col { get; set; }
@@ -110,18 +138,19 @@ namespace Advent2022
 
         public void draw()
         {
-            Console.SetCursorPosition(col - 400, row);
-            Console.Write('#');
+            Console.SetCursorPosition(col, row);
+            AnsiConsole.Markup($"[bold white]#[/]");
         }
     }
 
-    internal class Sand : ITwoDimObj
+    internal class Sand : IStuffOnAGrid
     {
         public int row { get; set; }
         public int col { get; set; }
 
         public (int row, int col) fallingDir;
         public bool dropping;
+        public bool packed;
 
         public Sand()
         {
@@ -129,27 +158,33 @@ namespace Advent2022
             col = 500;
             fallingDir = (1, 0);
             dropping = true;
+            packed = false;
         }
 
         public void draw()
         {
-            Console.SetCursorPosition(col - 400, row);
-            Console.Write('o');
+            Console.SetCursorPosition(col, row);
+            AnsiConsole.Markup($"[bold sandybrown]*[/]");
         }
+
+        public void pack() =>
+            //Console.SetCursorPosition(col, row);
+            //AnsiConsole.Markup($"[bold red]*[/]");
+            packed = true;
 
         public void erase()
         {
-            Console.SetCursorPosition(col - 400, row);
+            Console.SetCursorPosition(col, row);
             Console.Write(' ');
         }
 
         public void drop()
         {
-            erase();
+            //erase();
             row += fallingDir.row;
             col += fallingDir.col;
             fallingDir = (1, 0);
-            draw();
+            //draw();
         }
 
         private bool switchDirection()
@@ -164,7 +199,7 @@ namespace Advent2022
             return true;
         }
 
-        public int checkSurroundings(ITwoDimObj r)
+        public int checkSurroundings(IStuffOnAGrid r)
         {
             if (row + fallingDir.row == r.row && col + fallingDir.col == r.col)
             {
