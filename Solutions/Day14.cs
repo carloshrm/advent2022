@@ -26,10 +26,7 @@ namespace Advent2022
         {
             int count = 0;
             while (dropSand())
-            {
                 count++;
-                sand.RemoveAll(s => s.packed);
-            }
             return count;
         }
 
@@ -44,10 +41,7 @@ namespace Advent2022
                 //cave.Last().draw();
             }
             while (dropSand())
-            {
                 count++;
-                sand.RemoveAll(s => s.packed);
-            }
             return count + 1;
         }
 
@@ -92,7 +86,7 @@ namespace Advent2022
             int dropState = 1;
             while (dropState != -1)
             {
-                foreach (var obj in new List<IStuffOnAGrid>().Concat(cave.Where(c => c.row == newSand.row + 1)).Concat(sand))
+                foreach (var obj in new List<IStuffOnAGrid>().Concat(cave.Where(c => c.row == newSand.row + 1)).Concat(sand.Where(s => s.row + 1 > newSand.row)))
                 {
                     dropState = newSand.checkSurroundings(obj);
                     if (dropState != 1)
@@ -109,9 +103,7 @@ namespace Advent2022
             }
             //newSand.draw();
             sand.Add(newSand);
-            foreach (var s in sand.Where(s => s.row == newSand.row + 2 && s.col == newSand.col))
-                s.pack();
-
+            sand.RemoveAll(s => s.row == newSand.row + 2 && s.col == newSand.col);
             if (newSand.row <= 0)
                 return false;
             return true;
