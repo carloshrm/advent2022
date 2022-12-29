@@ -140,17 +140,15 @@ namespace Advent2022
         public int row { get; set; }
         public int col { get; set; }
 
-        public (int row, int col) fallingDir;
+        public int fallingDir;
         public bool dropping;
-        public bool packed;
 
         public Sand()
         {
             row = 0;
             col = 500;
-            fallingDir = (1, 0);
+            fallingDir = 0;
             dropping = true;
-            packed = false;
         }
 
         public void draw()
@@ -159,10 +157,10 @@ namespace Advent2022
             AnsiConsole.Markup($"[bold sandybrown]*[/]");
         }
 
-        public void pack() =>
-            //Console.SetCursorPosition(col, row);
-            //AnsiConsole.Markup($"[bold red]*[/]");
-            packed = true;
+        //public void pack() =>
+        //    //Console.SetCursorPosition(col, row);
+        //    //AnsiConsole.Markup($"[bold red]*[/]");
+        //    packed = true;
 
         public void erase()
         {
@@ -173,18 +171,18 @@ namespace Advent2022
         public void drop()
         {
             //erase();
-            row += fallingDir.row;
-            col += fallingDir.col;
-            fallingDir = (1, 0);
+            row += -1;
+            col += fallingDir;
+            fallingDir = 0;
             //draw();
         }
 
         private bool switchDirection()
         {
-            if (fallingDir == (1, 0))
-                fallingDir = (1, -1);
-            else if (fallingDir == (1, -1))
-                fallingDir = (1, 1);
+            if (fallingDir == 0)
+                fallingDir = -1;
+            else if (fallingDir == -1)
+                fallingDir = 1;
             else
                 return false;
 
@@ -193,7 +191,7 @@ namespace Advent2022
 
         public int checkSurroundings(IStuffOnAGrid r)
         {
-            if (row + fallingDir.row == r.row && col + fallingDir.col == r.col)
+            if (row - 1 == r.row && col + fallingDir == r.col)
             {
                 if (switchDirection())
                     return 0;

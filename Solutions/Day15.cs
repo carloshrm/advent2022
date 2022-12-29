@@ -2,23 +2,23 @@
 
 namespace Solutions
 {
-    internal class Day15 : Solution<int, int>
+    internal class Day15 : Solution<int, long>
     {
+        private IList<ElfSensor> field = new List<ElfSensor>();
         public Day15() : base(15)
         {
             //input = (input.example, input.example);
-
-        }
-
-        protected override int partOne()
-        {
-            var field = new List<ElfSensor>();
-
             foreach (var i in input.data)
             {
                 var items = Regex.Matches(i, @"-?\d+").Select(val => int.Parse(val.Value));
                 field.Add(new ElfSensor((items.ElementAt(0), items.ElementAt(1)), (items.ElementAt(2), items.ElementAt(3))));
             }
+
+
+        }
+
+        protected override int partOne()
+        {
             int targetY = 2000000;
 
             int count = 0;
@@ -48,7 +48,32 @@ namespace Solutions
             return count;
         }
 
-        protected override int partTwo() => base.partTwo();
+        protected override long partTwo()
+        {
+            int targetY = 4000000;
+            int highEdge = targetY;
+
+            for (long row = 0; row < targetY; row++)
+            {
+                for (long col = 0; col < highEdge; col++)
+                {
+                    bool inRange = false;
+                    foreach (var sens in field)
+                    {
+                        var distance = Math.Abs(sens.pos.x - col) + Math.Abs(sens.pos.y - row);
+                        if (distance <= sens.range)
+                        {
+                            inRange = true;
+                            col += sens.range - distance;
+                            break;
+                        }
+                    }
+                    if (!inRange)
+                        return row + (col * 4000000);
+                }
+            }
+            return -1;
+        }
     }
 
     internal class ElfSensor

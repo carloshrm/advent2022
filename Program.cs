@@ -11,7 +11,7 @@ namespace Advent2022
         private static void Main(string[] args)
         {
             readEnvSecrets();
-            new Day14().runSolution(true);
+            new Day15().runSolution(true);
             //foreach (var s in instantiateSolutions())
             //    s?.runSolution(true);
         }
