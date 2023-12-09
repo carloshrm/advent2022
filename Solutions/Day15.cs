@@ -5,16 +5,14 @@ namespace Solutions
     internal class Day15 : Solution<int, long>
     {
         private IList<ElfSensor> field = new List<ElfSensor>();
+
         public Day15() : base(15)
         {
-            //input = (input.example, input.example);
             foreach (var i in input.data)
             {
                 var items = Regex.Matches(i, @"-?\d+").Select(val => int.Parse(val.Value));
                 field.Add(new ElfSensor((items.ElementAt(0), items.ElementAt(1)), (items.ElementAt(2), items.ElementAt(3))));
             }
-
-
         }
 
         protected override int partOne()
@@ -22,11 +20,11 @@ namespace Solutions
             int targetY = 2000000;
 
             int count = 0;
-            var lowEdge = field.Min(s => s.pos.x - s.range);
-            var highEdge = field.Max(s => s.pos.x + s.range);
+            var leftEdge = field.Min(s => s.pos.x - s.range);
+            var rghtEdge = field.Max(s => s.pos.x + s.range);
 
             var existingBeacon = field.First().beacon;
-            for (int i = lowEdge; i < highEdge; i++)
+            for (int i = leftEdge; i < rghtEdge; i++)
             {
                 foreach (var sens in field)
                 {
